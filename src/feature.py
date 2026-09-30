@@ -1,11 +1,3 @@
-"""
-features.py - Row-wise feature engineering for the titanic dataset.
-
-Every function and transformer in this file operates on ONE row at a time.
-Nothing here computes a statistic across rows, so this step is leak free by construction: 
-applying it before or after the train/validation split produces identical output.
-"""
-
 from __future__ import annotations
 
 import re 
