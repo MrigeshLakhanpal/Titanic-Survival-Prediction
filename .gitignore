@@ -219,3 +219,6 @@ __marimo__/
 
 #Raw Kaggke Datasets
 data/*.csv
+
+# Joblib Dump Files
+model.joblib
