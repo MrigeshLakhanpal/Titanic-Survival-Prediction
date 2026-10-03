@@ -33,8 +33,6 @@ def main() -> None:
     ]
     lines += [format_row(row) for _, row in df.iterrows()]
     lines += [
-        "# Baseline vs Model Comparison",
-        "",
         f"Best model by ROC-AUC: {best_row['model']}",
         f"ROC-AUC = {best_row['roc_auc_mean']:.4f} \u00b1 {best_row['roc_auc_std']:.4f}",
         "",
