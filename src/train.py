@@ -22,7 +22,7 @@ def sex_only_baseline(X: pd.DataFrame, y: pd.Series, cv) -> tuple[float, float]:
         pred = (X.iloc[test_idx]["Sex"] == "female").astype(int)
         accs.append((pred.values == y.iloc[test_idx].values).mean())
     accs = np.array(accs)
-    print(f"{'Sex ONly rule':28s} Accuracy = {accs.mean():.4f} \u00b1 {accs.std():.4f}")
+    print(f"{'Sex Only rule':28s} Accuracy = {accs.mean():.4f} \u00b1 {accs.std():.4f}")
     return accs.mean(), accs.std()
 
 def evaluate(pipeline, X: pd.DataFrame, y: pd.Series, cv, name: str) -> dict:
@@ -33,7 +33,7 @@ def evaluate(pipeline, X: pd.DataFrame, y: pd.Series, cv, name: str) -> dict:
     )
     acc, auc = scores["test_accuracy"], scores["test_roc_auc"]
     print(
-        f"{name:28s} Accuracy = {acc.mean():.4f} \u00b1 {acc.std():.4f}"
+        f"{name:28s} Accuracy = {acc.mean():.4f} \u00b1 {acc.std():.4f} "
         f"ROC-AUC = {auc.mean():.4f} \u00b1 {auc.std():.4f}"
     )
     return {
@@ -53,7 +53,7 @@ def main(train_path: str, model_out: str) -> None:
     print("-"*50)
     evaluate(
         build_pipeline(DummyClassifier(strategy="most_frequent")),
-        X, y, cv, "Majority-class basline",
+        X, y, cv, "Majority-class baseline",
     )
     sex_only_baseline(X, y, cv)
 
@@ -78,16 +78,16 @@ def main(train_path: str, model_out: str) -> None:
     for name, model in candidates.items():
         result = evaluate(build_pipeline(model), X, y, cv, name)
         results.append(result)
-    if result["roc_auc_mean"] > best_score:
-        best_name, best_score, best_model = name, result["roc_auc_mean"], model
+        if result["roc_auc_mean"] > best_score:
+            best_name, best_score, best_model = name, result["roc_auc_mean"], model
 
-        print(f"\nBest model by ROC AUC: {best_name} ({best_score:.4f})")
-        final_pipeline = build_pipeline(best_model)
-        final_pipeline.fit(X, y)
-        joblib.dump(final_pipeline, model_out)
-        print(f"Saved final pipeline to {model_out}")
+    print(f"\nBest model by ROC AUC: {best_name} ({best_score:.4f})")
+    final_pipeline = build_pipeline(best_model)
+    final_pipeline.fit(X, y)
+    joblib.dump(final_pipeline, model_out)
+    print(f"Saved final pipeline to {model_out}")
 
-        pd.DataFrame(results).to_csv("../reports/baseline_vs_model_raw.csv", index = False)
+    pd.DataFrame(results).to_csv("../reports/baseline_vs_model_raw.csv", index = False)
 
 
 if __name__ == "__main__":
