@@ -14,7 +14,7 @@ def format_row(row: pd.Series) -> str:
     )
     return (
         f"| {row['model']}"
-        f"| {row['accuracy_mean']:.4f} \\u00b1 {row['accuracy_std']:.4f}"
+        f"| {row['accuracy_mean']:.4f} \u00b1 {row['accuracy_std']:.4f}"
         f"| {auc} |"
     )
 
@@ -23,7 +23,6 @@ def main() -> None:
     best_row = df.loc[df["roc_auc_mean"].idxmax()]
 
     lines = [
-        "# Baseline vs Model Performance",
         "",
         "5-fold stratified cross-validation, mean \u00b1 standard deviation",
         "across folds.",
@@ -38,7 +37,7 @@ def main() -> None:
         f"Best model by ROC-AUC: {best_row['model']}",
         f"ROC-AUC = {best_row['roc_auc_mean']:.4f} \u00b1 {best_row['roc_auc_std']:.4f}",
         "",
-        "Any model scoriing below the sex-only rule's accuracy has not"
+        "Any model scoring below the sex-only rule's accuracy has not "
         "learned anything beyond what a single column already reveals."
     ]
 
