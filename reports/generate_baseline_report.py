@@ -23,6 +23,7 @@ def main() -> None:
     best_row = df.loc[df["roc_auc_mean"].idxmax()]
 
     lines = [
+        "# Baseline vs Model Comparison",
         "",
         "5-fold stratified cross-validation, mean \u00b1 standard deviation",
         "across folds.",
