@@ -222,3 +222,6 @@ data/*.csv
 
 # Joblib Dump Files
 model.joblib
+
+#Regeneratable files
+submission.csv
