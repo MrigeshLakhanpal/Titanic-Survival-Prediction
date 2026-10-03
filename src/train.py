@@ -29,7 +29,7 @@ def evaluate(pipeline, X: pd.DataFrame, y: pd.Series, cv, name: str) -> dict:
     scores = cross_validate(
         pipeline, X, y, cv=cv,
         scoring=["accuracy", "roc_auc"],
-        return_train_scores=False,
+        return_train_score=False,
     )
     acc, auc = scores["test_accuracy"], scores["test_roc_auc"]
     print(
@@ -60,9 +60,9 @@ def main(train_path: str, model_out: str) -> None:
     print("\nModels")
     print("-"*50)
     candidates={
-        "Logistic Regression": LogisticRegression(max_iters=1000),
+        "Logistic Regression": LogisticRegression(max_iter=1000),
         "Decision Tree": DecisionTreeClassifier(max_depth=5, random_state=42),
-        "Random Forets": RandomForestClassifier(
+        "Random Forests": RandomForestClassifier(
             n_estimators=400, max_depth=6, random_state=42
         ),
         "Gradient Boosting": GradientBoostingClassifier(
@@ -78,8 +78,8 @@ def main(train_path: str, model_out: str) -> None:
     for name, model in candidates.items():
         result = evaluate(build_pipeline(model), X, y, cv, name)
         results.append(result)
-        if result["roc_auc_mean"] > best_score:
-            best_name, best_score, best_model = name, result["roc_auc_mean"], model
+    if result["roc_auc_mean"] > best_score:
+        best_name, best_score, best_model = name, result["roc_auc_mean"], model
 
         print(f"\nBest model by ROC AUC: {best_name} ({best_score:.4f})")
         final_pipeline = build_pipeline(best_model)
@@ -87,12 +87,12 @@ def main(train_path: str, model_out: str) -> None:
         joblib.dump(final_pipeline, model_out)
         print(f"Saved final pipeline to {model_out}")
 
-        pd.DataFrame(results).to_csv("../reports/basline_vs_model_raw.csv", index = False)
+        pd.DataFrame(results).to_csv("../reports/baseline_vs_model_raw.csv", index = False)
 
 
-    if __name__ == "__main__":
-        parser = argparse.ArgumentParser(description=__doc__)
-        parser.add_argument("--train_path", default="../data/train.csv")
-        parser.add_argument("--out", default="../model.joblib")
-        args = parser.parse_args()
-        main(args.train_path, args.out)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--train_path", default="../data/train.csv")
+    parser.add_argument("--out", default="../model.joblib")
+    args = parser.parse_args()
+    main(args.train_path, args.out)
