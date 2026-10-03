@@ -7,11 +7,11 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold, cross_validate
 
-sys.path.insert(0, str(Path(__file__).resolved().parent.parent / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from feature import FeatureEngineer
 from pipeline import build_pipeline
 
-TRAIN_CSV = Path(__file__).resolved().parent.parent / "data" / "train.csv"
+TRAIN_CSV = Path(__file__).resolve().parent.parent / "data" / "train.csv"
 OUT_MD = Path("leakage_ablation.md")
 
 def build_leaky_matrix(df: pd.DataFrame) -> pd.DataFrame:
@@ -30,7 +30,7 @@ def build_leaky_matrix(df: pd.DataFrame) -> pd.DataFrame:
 
     # Not a statistical leak by itself
     X = pd.get_dummies(
-        X, columns = ["PClass", "Sex", "Embarked", "Title", "Deck","AgeGroup"]
+        X, columns = ["Pclass", "Sex", "Embarked", "Title", "Deck","AgeGroup"]
     )
     return X
 
@@ -52,7 +52,7 @@ def main() -> None:
     #Safe: whole piprline refits inside each fold
     safe = cross_validate(
         build_pipeline(LogisticRegression(max_iter=1000)), X_raw, y, cv=cv,
-        scoring = ["accuracy", "roc-auc"]
+        scoring = ["accuracy", "roc_auc"]
     )
 
     leaky_acc, leaky_auc = leaky["test_accuracy"], leaky["test_roc_auc"]
