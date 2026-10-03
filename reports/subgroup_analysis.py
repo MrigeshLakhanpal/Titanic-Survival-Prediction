@@ -44,8 +44,8 @@ def main() -> None:
     lines = [
         "# Subgroup Accuracy Analysis", 
         "",
-        "Accuracy computed from out=of-fold predictions"
-        "(cross_val_predict), so every passenger is scored by a model"
+        "Accuracy computed from out-of-fold predictions "
+        "(cross_val_predict), so every passenger is scored by a model "
         "that never trained on that passenger.",
         "",
         "## By Sex",
@@ -63,7 +63,7 @@ def main() -> None:
         f"**Overall accuracy (all rows, out-of-fold)**: {overall_acc:.4f}",
         "",
         "Compare each subgroup's accuracy against this overall number "
-        "-- a subgroup sitting noticeably below it is where the model"
+        "-- a subgroup sitting noticeably below it is where the model "
         "is weakest, even if the aggregate score looks fine.",
     ]
     OUT_MD.write_text("\n".join(lines))
