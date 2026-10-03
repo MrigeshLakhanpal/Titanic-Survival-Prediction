@@ -12,16 +12,16 @@ from feature import FeatureEngineer
 
 #Column Groups (these are OUTPUT_COLUMNS of feature engineering)
 NUMERIC_FEATURES = ["Age", "Fare", "FamilySize"]
-CATEGORICAL_FEATURES = ["Pclass", "Sex", "Embarked", "Title", "IsAlone", "HasCabin", "Deck", "AgeGroup"]
+CATEGORICAL_FEATURES = ["Pclass", "Sex", "Embarked", "Title", "Deck", "AgeGroup"]
 PASSTHROUGH_FEATURES = ["IsAlone", "HasCabin"]
 
 class GroupMedianAgeImputer(BaseEstimator, TransformerMixin):
     def __init__(self, group_cols = ("Pclass", "Sex"), target_col: str = "Age"):
         self.group_cols = list(group_cols)
-        self.target_cols = target_col
+        self.target_col = target_col
 
     def fit(self, X: pd.DataFrame, y = None) -> "GroupMedianAgeImputer":
-        self.group_medians_ = X.groupby(self.group_cols)[self.target_cols].median()
+        self.group_medians_ = X.groupby(self.group_cols)[self.target_col].median()
         self.overall_median_ = X[self.target_col].median()
         return self
     
@@ -31,7 +31,7 @@ class GroupMedianAgeImputer(BaseEstimator, TransformerMixin):
         if missing.any():
             keys = list(zip(*[X.loc[missing, c] for c in self.group_cols]))
             filled = [self.group_medians_.get(k, self.overall_median_) for k in keys]
-            X.loc[missing], self.target_col = filled
+            X.loc[missing, self.target_col] = filled
         X[self.target_col] = X[self.target_col].fillna(self.overall_median_)
         return X
     
@@ -41,7 +41,7 @@ class GroupMedianAgeImputer(BaseEstimator, TransformerMixin):
 numeric_pipeline = Pipeline(
     [
     ("impute", SimpleImputer(strategy = "median")),
-    ("bin", KBinsDiscretizer(n_bins = 4, encode = "original", strategy = "quantile")),
+    ("bin", KBinsDiscretizer(n_bins = 4, encode = "ordinal", strategy = "quantile")),
     ("scale", StandardScaler()),
     ] 
 )
