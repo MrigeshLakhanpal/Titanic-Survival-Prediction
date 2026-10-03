@@ -5,6 +5,7 @@ import argparse
 import joblib
 import numpy as np
 import pandas as pd
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.dummy import DummyClassifier
 from sklearn.ensemble import GradientBoostingClassifier , RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
@@ -69,7 +70,7 @@ def main(train_path: str, model_out: str) -> None:
             n_estimators=300, max_depth=3, random_state=42
         ),
         "K-Nearest Neighbors": KNeighborsClassifier(n_neighbors=15),
-        "Support Vector Machine": SVC(probability = True, random_state=42),
+        "Support Vector Machine": CalibratedClassifierCV(SVC(random_state=42), ensemble=False),
         "Naive Bayes": GaussianNB(),
     }
 
