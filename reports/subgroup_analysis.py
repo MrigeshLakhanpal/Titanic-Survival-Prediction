@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import sys
-from Pathlib import Path
+from pathlib import Path
 
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
