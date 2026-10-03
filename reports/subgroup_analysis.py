@@ -7,10 +7,10 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold, cross_val_predict
 
-sys.path.insert(0, str(Path(__file).resolve().parent.parent / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from pipeline import build_pipeline
 
-TRAIN_CSV = Path(_-file_-).resolve().parent.parent / "data" / "train.csv"
+TRAIN_CSV = Path(__file__).resolve().parent.parent / "data" / "train.csv"
 OUT_MD = Path("subgroup_analysis.md")
 
 def subgroup_table(
@@ -42,7 +42,7 @@ def main() -> None:
     )
 
     lines = [
-        " #Subgroup Accuracy Analysis", 
+        "# Subgroup Accuracy Analysis", 
         "",
         "Accuracy computed from out=of-fold predictions"
         "(cross_val_predict), so every passenger is scored by a model"
@@ -60,7 +60,7 @@ def main() -> None:
     overall_acc = (y.values == y_pred).mean()
     lines += [
         "",
-        f"**Overall acuracy (all rows, out-of-fold): {overall_acc:.4f}",
+        f"**Overall accuracy (all rows, out-of-fold)**: {overall_acc:.4f}",
         "",
         "Compare each subgroup's accuracy against this overall number "
         "-- a subgroup sitting noticeably below it is where the model"
@@ -69,5 +69,5 @@ def main() -> None:
     OUT_MD.write_text("\n".join(lines))
     print(f"Wrote {OUT_MD}")
 
-if __name_- == "__main__":
+if __name__ == "__main__":
     main()
